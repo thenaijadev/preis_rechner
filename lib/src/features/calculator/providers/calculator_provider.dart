@@ -1,9 +1,7 @@
-// calculator_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pricing_calculator/src/features/calculator/domain/cost_item.dart';
 
-import 'calculator_state.dart';
-// import 'cost_item.dart';
+import '../services/calculator_state.dart';
 
 final calculatorProvider =
     StateNotifierProvider<CalculatorNotifier, CalculatorState>((ref) {

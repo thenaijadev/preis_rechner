@@ -15,7 +15,6 @@ class InputFieldWidget extends StatelessWidget {
       this.obscureText = false,
       this.suffixIcon,
       this.prefixicon,
-      // this.padding = const EdgeInsets.only(bottom: 10),
       this.onTap,
       this.maxLines = 1,
       this.fontWeight = FontWeight.w600,
@@ -43,7 +42,7 @@ class InputFieldWidget extends StatelessWidget {
   final TextInputType keyboardType;
   final Widget? prefixicon;
   final String? initialValue;
-  // final EdgeInsetsGeometry padding;
+
   final int? maxLines;
   final double enabledBorderRadius;
   final double verticalContentPadding;

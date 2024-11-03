@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pricing_calculator/src/constants/app_sizes.dart';
@@ -6,7 +5,7 @@ import 'package:pricing_calculator/src/constants/assets.dart';
 import 'package:pricing_calculator/src/constants/colors.dart';
 import 'package:pricing_calculator/src/constants/string_constants.dart';
 import 'package:pricing_calculator/src/features/calculator/presentation/price_result_popup.dart';
-import 'package:pricing_calculator/src/features/calculator/services/calculator_provider.dart';
+import 'package:pricing_calculator/src/features/calculator/providers/calculator_provider.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/call_to_action_button.dart';
 import 'package:pricing_calculator/src/shared/container_widget.dart';
 import 'package:pricing_calculator/src/shared/dialog.dart';

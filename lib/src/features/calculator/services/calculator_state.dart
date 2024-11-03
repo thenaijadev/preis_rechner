@@ -1,8 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pricing_calculator/src/features/calculator/domain/cost_item.dart';
 
-// import 'cost_item.dart';
-
 part 'calculator_state.freezed.dart';
 
 @freezed
