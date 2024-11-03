@@ -1,10 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pricing_calculator/src/constants/app_sizes.dart';
 import 'package:pricing_calculator/src/constants/assets.dart';
 import 'package:pricing_calculator/src/constants/colors.dart';
 import 'package:pricing_calculator/src/constants/string_constants.dart';
-import 'package:pricing_calculator/src/features/calculator/domain/cost_item.dart';
 import 'package:pricing_calculator/src/features/calculator/presentation/price_result_popup.dart';
+import 'package:pricing_calculator/src/features/calculator/services/calculator_provider.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/call_to_action_button.dart';
 import 'package:pricing_calculator/src/shared/container_widget.dart';
 import 'package:pricing_calculator/src/shared/dialog.dart';
@@ -12,72 +14,18 @@ import 'package:pricing_calculator/src/shared/input_field_widget.dart';
 import 'package:pricing_calculator/src/shared/text_widget.dart';
 import 'package:pricing_calculator/src/utilities/navigator_utils.dart';
 
-class PricingCalculatorWidget extends StatefulWidget {
+class PricingCalculatorWidget extends ConsumerWidget {
   const PricingCalculatorWidget({
     super.key,
     required this.index,
   });
   final int index;
-
   @override
-  State<PricingCalculatorWidget> createState() =>
-      _PricingCalculatorWidgetState();
-}
-
-class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
-  double sliderValue = 0;
-  List<CostItem> costItems = [];
-
-  void addNewRow() {
-    setState(() {
-      costItems.add(CostItem());
-    });
-  }
-
-  void deleteRow(int index) {
-    setState(() {
-      costItems.removeAt(index);
-    });
-  }
-
-  void updateCostItem(int index, String field, dynamic value) {
-    setState(() {
-      final item = costItems[index];
-      switch (field) {
-        case 'label':
-          item.label = value;
-          break;
-        case 'costType':
-          item.costType = value;
-          break;
-        case 'price':
-          item.price = double.tryParse(value) ?? 0;
-          break;
-        case 'comment':
-          item.comment = value;
-          break;
-      }
-    });
-  }
-
-  double calculateTotalFixedCosts() {
-    return costItems
-        .where((item) => item.costType == 'Fixed Costs')
-        .map((item) => item.price ?? 0)
-        .fold(0, (sum, price) => sum + price);
-  }
-
-  double calculateTotalVariableCosts() {
-    return costItems
-        .where((item) => item.costType == 'Variable Costs')
-        .map((item) => item.price ?? 0)
-        .fold(0, (sum, price) => sum + price);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(calculatorProvider);
+    final notifier = ref.read(calculatorProvider.notifier);
     return ContainerWidget(
-      key: NavigationUtilities.keys[widget.index],
+      key: NavigationUtilities.keys[index],
       padding: const EdgeInsets.symmetric(
         vertical: Sizes.p50,
       ),
@@ -145,7 +93,7 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                     ),
                   ],
                 ),
-                ...List.generate(costItems.length, (index) {
+                ...List.generate(state.costItems.length, (index) {
                   return Row(
                     children: [
                       Expanded(
@@ -160,9 +108,11 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                             enabledBorderRadius: 5,
                             hintColor: AppColors.black,
                             hintText: "",
-                            initialValue: costItems[index].label,
-                            onChanged: (val) =>
-                                updateCostItem(index, 'label', val),
+                            initialValue: state.costItems[index].label,
+                            onChanged: (val) {
+                              notifier.updateCostItem(
+                                  index: index, field: "label", value: val!);
+                            },
                           ),
                         ),
                       ),
@@ -172,7 +122,7 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                           padding: const EdgeInsets.only(
                               right: Sizes.p12, bottom: Sizes.p12),
                           child: DropdownButtonFormField<String>(
-                            value: costItems[index].costType,
+                            value: state.costItems[index].costType,
                             icon: const Icon(Icons.keyboard_arrow_down_rounded),
                             dropdownColor: AppColors.white,
                             decoration: InputDecoration(
@@ -204,8 +154,10 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                                 child: TextWidget(text: "Variable Costs"),
                               ),
                             ],
-                            onChanged: (val) =>
-                                updateCostItem(index, 'costType', val),
+                            onChanged: (val) {
+                              notifier.updateCostItem(
+                                  index: index, field: "costType", value: val!);
+                            },
                           ),
                         ),
                       ),
@@ -219,11 +171,14 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                             enabledBorderRadius: 5,
                             hintColor: AppColors.black,
                             hintText: "",
-                            initialValue: costItems[index].price?.toString(),
+                            initialValue:
+                                state.costItems[index].price?.toString(),
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true),
-                            onChanged: (val) =>
-                                updateCostItem(index, 'price', val),
+                            onChanged: (val) {
+                              notifier.updateCostItem(
+                                  index: index, field: "price", value: val!);
+                            },
                           ),
                         ),
                       ),
@@ -236,9 +191,9 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                             enabledBorderRadius: 5,
                             hintColor: AppColors.black,
                             hintText: "",
-                            initialValue: costItems[index].comment,
+                            initialValue: state.costItems[index].comment,
                             suffixIcon: InkWell(
-                              onTap: () => deleteRow(index),
+                              onTap: () => notifier.deleteRow(index),
                               child: Padding(
                                 padding: const EdgeInsets.all(Sizes.p12),
                                 child: Image.asset(
@@ -247,8 +202,10 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                                 ),
                               ),
                             ),
-                            onChanged: (val) =>
-                                updateCostItem(index, 'comment', val),
+                            onChanged: (val) {
+                              notifier.updateCostItem(
+                                  index: index, field: "comment", value: val!);
+                            },
                           ),
                         ),
                       ),
@@ -265,7 +222,7 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                         TextWidget(text: "Add row", color: AppColors.white),
                       ],
                     ),
-                    onTap: addNewRow,
+                    onTap: notifier.addNewRow,
                   ),
                 ),
                 gapH24,
@@ -289,7 +246,8 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                         TextWidget(
                             fontSize: Sizes.p14,
                             fontWeight: FontWeight.w500,
-                            text: "${(sliderValue * 100).round().toString()}%"),
+                            text:
+                                "${(state.profitMargin * 100).round().toString()}%"),
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                             thumbColor: Colors.white,
@@ -304,17 +262,15 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                             ),
                           ),
                           child: Slider(
-                            label: (sliderValue * 100).round().toString(),
-                            thumbColor: AppColors.white,
-                            max: 1,
-                            min: 0,
-                            value: sliderValue,
-                            onChanged: (val) {
-                              setState(() {
-                                sliderValue = val;
-                              });
-                            },
-                          ),
+                              label:
+                                  (state.profitMargin * 100).round().toString(),
+                              thumbColor: AppColors.white,
+                              max: 1,
+                              min: 0,
+                              value: state.profitMargin,
+                              onChanged: (val) {
+                                notifier.updateProfitMargin(val);
+                              }),
                         ),
                         gapH24,
                         TextWidget(
@@ -334,16 +290,15 @@ class _PricingCalculatorWidgetState extends State<PricingCalculatorWidget> {
                     ),
                   ),
                   onTap: () {
-                    final totalFixed = calculateTotalFixedCosts();
-                    final totalVariable = calculateTotalVariableCosts();
-                    final profitMargin = sliderValue;
-
+                    final totalFixed = notifier.calculateTotalFixedCosts();
+                    final totalVariable =
+                        notifier.calculateTotalVariableCosts();
                     showWhitePopup(
                       context: context,
                       widget: PriceResultPopup(
                           totalFixed: totalFixed,
                           totalVariable: totalVariable,
-                          profitMargin: profitMargin),
+                          profitMargin: state.profitMargin),
                     );
                   },
                 ),
