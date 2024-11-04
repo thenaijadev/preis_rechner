@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:pricing_calculator/src/constants/app_sizes.dart';
 import 'package:pricing_calculator/src/constants/colors.dart';
 import 'package:pricing_calculator/src/constants/string_constants.dart';
@@ -27,11 +28,15 @@ class HeroSectionWidget extends StatelessWidget {
           children: [
             SizedBox(
               width: 890,
-              child: TextWidget(
-                textAlign: TextAlign.center,
-                text: StringConstants.heroTitle,
-                fontSize: Sizes.p48,
-                color: AppColors.white,
+              child: FadeIn(
+                duration: const Duration(milliseconds: 1000),
+                curve: Curves.easeIn,
+                child: TextWidget(
+                  textAlign: TextAlign.center,
+                  text: StringConstants.heroTitle,
+                  fontSize: Sizes.p48,
+                  color: AppColors.white,
+                ),
               ),
             ),
             gapH20,

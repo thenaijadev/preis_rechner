@@ -1,0 +1,18 @@
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  },
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "preis-rechner",
+          "configurations": {
+            "web": "1:837674718184:web:08cf1775923b3bd8750a5d"
+          }
+        }
+      }
+    }
+  }
+}

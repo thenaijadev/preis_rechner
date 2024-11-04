@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pricing_calculator/src/constants/assets.dart';
 import 'package:pricing_calculator/src/constants/colors.dart';
 import 'package:pricing_calculator/src/constants/nav_constants.dart';
+import 'package:pricing_calculator/src/features/calculator/presentation/price_calculator.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/benefits_section.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/call_to_action_button.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/contact_section.dart';
@@ -9,7 +10,6 @@ import 'package:pricing_calculator/src/features/landing/presentation/widgets/faq
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/features_section.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/hero_section.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/navigation_bar.dart';
-import 'package:pricing_calculator/src/features/calculator/presentation/price_calculator.dart';
 import 'package:pricing_calculator/src/features/landing/presentation/widgets/testimonial_section.dart';
 import 'package:pricing_calculator/src/router/routes.dart';
 import 'package:pricing_calculator/src/shared/text_widget.dart';
@@ -92,7 +92,14 @@ class _LandingScreenState extends State<LandingScreen> {
                       text: "Zum Rechner",
                       color: AppColors.white,
                     ),
-                    onTap: () {})
+                    onTap: () {
+                      NavigationUtilities.updateUrlWithoutNavigation(
+                          Routes.pricingCalculator);
+                      Scrollable.ensureVisible(
+                          NavigationUtilities
+                              .pricingCalculatorKey.currentContext!,
+                          duration: const Duration(seconds: 1));
+                    })
               ],
             ),
           ),

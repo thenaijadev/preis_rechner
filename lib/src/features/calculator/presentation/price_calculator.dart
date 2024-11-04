@@ -92,6 +92,7 @@ class PricingCalculatorWidget extends ConsumerWidget {
                     ),
                   ],
                 ),
+                gapH20,
                 ...List.generate(state.costItems.length, (index) {
                   return Row(
                     children: [
@@ -105,8 +106,8 @@ class PricingCalculatorWidget extends ConsumerWidget {
                           child: InputFieldWidget(
                             fillColor: AppColors.white,
                             enabledBorderRadius: 5,
-                            hintColor: AppColors.black,
-                            hintText: "",
+                            hintColor: const Color.fromARGB(66, 13, 13, 13),
+                            hintText: "Kostenart",
                             initialValue: state.costItems[index].label,
                             onChanged: (val) {
                               notifier.updateCostItem(
@@ -124,6 +125,10 @@ class PricingCalculatorWidget extends ConsumerWidget {
                             value: state.costItems[index].costType,
                             icon: const Icon(Icons.keyboard_arrow_down_rounded),
                             dropdownColor: AppColors.white,
+                            hint: const TextWidget(
+                              text: "Kostenkategorie",
+                              color: Color.fromARGB(66, 13, 13, 13),
+                            ),
                             decoration: InputDecoration(
                               focusedBorder: const OutlineInputBorder(
                                 borderSide:
@@ -168,8 +173,8 @@ class PricingCalculatorWidget extends ConsumerWidget {
                           child: InputFieldWidget(
                             fillColor: AppColors.white,
                             enabledBorderRadius: 5,
-                            hintColor: AppColors.black,
-                            hintText: "",
+                            hintColor: const Color.fromARGB(66, 13, 13, 13),
+                            hintText: "Kosten",
                             initialValue:
                                 state.costItems[index].price?.toString(),
                             keyboardType: const TextInputType.numberWithOptions(
@@ -188,8 +193,8 @@ class PricingCalculatorWidget extends ConsumerWidget {
                           child: InputFieldWidget(
                             fillColor: AppColors.white,
                             enabledBorderRadius: 5,
-                            hintColor: AppColors.black,
-                            hintText: "",
+                            hintColor: const Color.fromARGB(66, 13, 13, 13),
+                            hintText: "Hinweis",
                             initialValue: state.costItems[index].comment,
                             suffixIcon: InkWell(
                               onTap: () => notifier.deleteRow(index),
@@ -249,7 +254,7 @@ class PricingCalculatorWidget extends ConsumerWidget {
                                 "${(state.profitMargin * 100).round().toString()}%"),
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
-                            thumbColor: Colors.white,
+                            thumbColor: AppColors.black,
                             trackHeight: 8,
                             thumbShape: const RoundSliderThumbShape(
                               enabledThumbRadius: 12,
@@ -263,7 +268,7 @@ class PricingCalculatorWidget extends ConsumerWidget {
                           child: Slider(
                               label:
                                   (state.profitMargin * 100).round().toString(),
-                              thumbColor: AppColors.white,
+                              thumbColor: AppColors.black,
                               max: 1,
                               min: 0,
                               value: state.profitMargin,
